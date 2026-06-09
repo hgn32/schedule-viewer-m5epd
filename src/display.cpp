@@ -12,9 +12,9 @@
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
-// Monochrome update mode (2-level black/white). Grayscale (GC16) renders
-// faint on this panel, so use DU for solid black lines/text.
-#define DISP_UPDATE_MODE UPDATE_MODE_DU
+// GC16 full refresh (same as location-hub / png-board). Lines are drawn as
+// solid fillRect bars (the fill path renders solid; drawLine looked faint).
+#define DISP_UPDATE_MODE UPDATE_MODE_GC16
 
 static const int FS_DATE  = 26;
 static const int FS_TIME  = 32;
@@ -77,8 +77,8 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
 
     drawHeader(jst_now);
 
-    _canvas.drawLine(0, HEADER_H, SCR_W, HEADER_H, C_BLACK);
-    _canvas.drawLine(LABEL_W, HEADER_H, LABEL_W, SCR_H, C_GRAY);
+    hline(0, HEADER_H, SCR_W, C_BLACK, 3);
+    vline(LABEL_W, HEADER_H, SCR_H - HEADER_H, C_BLACK, 2);
 
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
@@ -117,8 +117,8 @@ void Display::drawTimeline(const std::vector<Event>& events,
     for (int h = 0; h <= DISP_HOURS; h++) {
         int y = HEADER_H + (int)(h * px_hour);
 
-        uint8_t line_col = (h == 0 || h == DISP_HOURS) ? C_BLACK : C_LGRAY;
-        _canvas.drawLine(0, y, SCR_W, y, line_col);
+        int thick = (h == 0 || h == DISP_HOURS) ? 3 : 1;
+        hline(0, y, SCR_W, C_BLACK, thick);
 
         if (h < DISP_HOURS) {
             uint32_t hour_utc = display_start_utc + (uint32_t)(h * 3600);
@@ -144,8 +144,8 @@ void Display::drawTimeline(const std::vector<Event>& events,
         now_utc <  display_start_utc + (uint32_t)(DISP_HOURS * 3600)) {
         int elapsed_min = (int)((now_utc - display_start_utc) / 60);
         int y_now = HEADER_H + (int)(elapsed_min * px_min);
-        _canvas.fillCircle(LABEL_W, y_now, 8, C_DGRAY);
-        _canvas.drawLine(LABEL_W, y_now, SCR_W, y_now, C_DGRAY);
+        _canvas.fillRect(LABEL_W - 6, y_now - 6, 12, 12, C_BLACK);
+        hline(LABEL_W, y_now, SCR_W - LABEL_W, C_BLACK, 3);
     }
 
     auto layout = layoutEvents(events);
@@ -176,7 +176,7 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
     if (box_h < 4 || box_w < 4) return;
 
     _canvas.fillRect(x_left, y_top, box_w, box_h, C_WHITE);
-    _canvas.drawRect(x_left, y_top, box_w, box_h, C_BLACK);
+    boxOutline(x_left, y_top, box_w, box_h, C_BLACK, 2);
 
     int tx = x_left + 6;
     int ty = y_top + 6;
@@ -257,4 +257,23 @@ void Display::canvasTextRight(const String& str, int right_x, int y, int size_px
     _canvas.setTextColor(color, C_WHITE);
     _canvas.setTextDatum(TR_DATUM);
     _canvas.drawString(str, right_x, y);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Lines are drawn as solid filled bars. fillRect writes packed 4-bit nibbles
+// (renders solid), whereas drawLine/drawRect appeared faint on this panel.
+
+void Display::hline(int x, int y, int w, uint8_t color, int thick) {
+    _canvas.fillRect(x, y, w, thick, color);
+}
+
+void Display::vline(int x, int y, int h, uint8_t color, int thick) {
+    _canvas.fillRect(x, y, thick, h, color);
+}
+
+void Display::boxOutline(int x, int y, int w, int h, uint8_t color, int thick) {
+    hline(x, y, w, color, thick);                 // top
+    hline(x, y + h - thick, w, color, thick);     // bottom
+    vline(x, y, h, color, thick);                 // left
+    vline(x + w - thick, y, h, color, thick);     // right
 }
