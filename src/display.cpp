@@ -57,9 +57,8 @@ void Display::showBootMessage(const String& msg) {
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
     }
-    // First visible push: INIT then GC16, matching m5ped-png-board's
-    // proven panel-init sequence at 540x960.
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT);
+    // GC16 only, matching location-hub-m5epd. Panel init is done by
+    // M5.EPD.Clear(true) in setup(), not by an INIT push here.
     _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
 }
 
