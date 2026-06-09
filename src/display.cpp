@@ -48,7 +48,6 @@ void Display::begin() {
 
 void Display::showBootMessage(const String& msg) {
     _canvas.fillCanvas(C_WHITE);
-    _canvas.setTextColor(C_BLACK, C_WHITE);
     if (_font_loaded) {
         _canvas.setTextSize(FS_DATE);
         _canvas.setTextDatum(MC_DATUM);
