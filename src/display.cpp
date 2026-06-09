@@ -2,19 +2,19 @@
 #include "time_util.h"
 #include <algorithm>
 
-// M5EPD 4bpp grayscale as displayed on this panel: 0 = white, 15 = black
-// (verified empirically + matches location-hub-m5epd: bg left at 0, lines drawn with 15)
+// Monochrome only: 0 = white, 15 = black. No mid-gray (grayscale renders
+// faint on this panel), so every "ink" color maps to solid black.
 #define C_WHITE  0
-#define C_LGRAY  4
-#define C_GRAY   8
-#define C_DGRAY  12
+#define C_LGRAY  15
+#define C_GRAY   15
+#define C_DGRAY  15
 #define C_BLACK  15
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
-// Content update mode. GC16 = 16-level high quality; DU = 2-level B/W fast.
-// Switch this single line to UPDATE_MODE_DU to test pure black/white output.
-#define DISP_UPDATE_MODE UPDATE_MODE_GC16
+// Monochrome update mode (2-level black/white). Grayscale (GC16) renders
+// faint on this panel, so use DU for solid black lines/text.
+#define DISP_UPDATE_MODE UPDATE_MODE_DU
 
 static const int FS_DATE  = 26;
 static const int FS_TIME  = 32;
