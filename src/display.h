@@ -34,11 +34,6 @@ private:
     void canvasText(const String& str, int x, int y, int size_px, uint8_t color = 0);
     void canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color = 0);
 
-    // Solid lines drawn as filled bars (fillRect renders solid; drawLine faint).
-    void hline(int x, int y, int w, uint8_t color, int thick = 2);
-    void vline(int x, int y, int h, uint8_t color, int thick = 2);
-    void boxOutline(int x, int y, int w, int h, uint8_t color, int thick = 2);
-
     // Screen dimensions (portrait, SetRotation(90))
     static const int SCR_W      = 540;
     static const int SCR_H      = 960;

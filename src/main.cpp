@@ -52,7 +52,7 @@ static void syncRTC(uint32_t utc_epoch) {
 void setup() {
     M5.begin();
     M5.EPD.SetRotation(90);
-    M5.EPD.Clear(true);   // full panel init (location-hub uses Clear(true))
+    M5.EPD.Clear();
     M5.RTC.begin();
 
     restoreTimeFromRTC();
