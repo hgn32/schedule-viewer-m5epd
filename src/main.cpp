@@ -53,7 +53,7 @@ void setup() {
     M5.begin();
     M5.EPD.SetRotation(90);
     M5.EPD.Clear(true);
-    delay(3000);  // wait for EPD full-refresh to complete before next pushCanvas
+    M5.EPD.WaitBusy(10000);  // INIT refresh takes >3s; default WaitBusy timeout is 3s
     M5.RTC.begin();
 
     restoreTimeFromRTC();
