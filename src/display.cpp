@@ -26,6 +26,7 @@ static const int FS_LOC   = 24;
 // ─────────────────────────────────────────────────────────────────────────────
 
 void Display::begin() {
+    _canvas.setDriver(&M5.EPD);
     _canvas.createCanvas(SCR_W, SCR_H);
     _canvas.setTextDatum(TL_DATUM);
 
