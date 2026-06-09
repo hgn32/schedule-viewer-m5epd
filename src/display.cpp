@@ -12,6 +12,10 @@
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
+// Content update mode. GC16 = 16-level high quality; DU = 2-level B/W fast.
+// Switch this single line to UPDATE_MODE_DU to test pure black/white output.
+#define DISP_UPDATE_MODE UPDATE_MODE_GC16
+
 static const int FS_DATE  = 26;
 static const int FS_TIME  = 32;
 static const int FS_HOUR  = 20;
@@ -57,9 +61,9 @@ void Display::showBootMessage(const String& msg) {
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
     }
-    // GC16 only, matching location-hub-m5epd. Panel init is done by
-    // M5.EPD.Clear(true) in setup(), not by an INIT push here.
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
+    // Full panel init (white reset) every push, then draw content.
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT);
+    _canvas.pushCanvas(0, 0, DISP_UPDATE_MODE);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -79,8 +83,9 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
 
-    // GC16 full refresh, matching official M5EPD_TTF and png-board.
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
+    // Full panel init (white reset) every render, then draw content.
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT);
+    _canvas.pushCanvas(0, 0, DISP_UPDATE_MODE);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
