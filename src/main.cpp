@@ -61,10 +61,7 @@ void setup() {
     g_display.begin();
 
     g_display.showBootMessage("スケジュール要求中...");
-    Serial.begin(115200);
-    delay(100);
     Serial.println("REQ:ALL");
-    Serial.flush();
 
     g_last_hour_utc = floorHourUtc();
     g_display.render(g_store, nowUtc());

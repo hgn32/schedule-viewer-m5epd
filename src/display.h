@@ -1,6 +1,5 @@
 #pragma once
 #include <M5EPD.h>
-#include <OpenFontRender.h>
 #include "schedule.h"
 
 struct LayoutEvent {
@@ -23,8 +22,7 @@ public:
     void render(ScheduleStore& store, uint32_t now_utc);
 
 private:
-    M5EPD_Canvas  _canvas;
-    OpenFontRender _ofr;
+    M5EPD_Canvas _canvas;
     bool _font_loaded = false;
 
     void drawHeader(const struct tm& jst_now);
@@ -33,17 +31,17 @@ private:
     void drawEventBox(const LayoutEvent& le, uint32_t display_start_utc);
     std::vector<LayoutEvent> layoutEvents(std::vector<Event> events);
 
-    void ofrText(const String& str, int x, int y, int size_px, uint16_t color = 0x0000);
-    void ofrTextRight(const String& str, int right_x, int y, int size_px, uint16_t color = 0x0000);
+    void canvasText(const String& str, int x, int y, int size_px, uint8_t color = 0);
+    void canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color = 0);
 
     // Screen dimensions (portrait, SetRotation(90))
     static const int SCR_W      = 1404;
     static const int SCR_H      = 1872;
     static const int HEADER_H   = 120;
-    static const int TIMELINE_H = SCR_H - HEADER_H;  // 1752
+    static const int TIMELINE_H = SCR_H - HEADER_H;
     static const int LABEL_W    = 120;
     static const int CONTENT_X  = LABEL_W;
-    static const int CONTENT_W  = SCR_W - LABEL_W;   // 1284
+    static const int CONTENT_W  = SCR_W - LABEL_W;
     static const int DISP_HOURS = 6;
 
     float pxPerHour() const { return (float)TIMELINE_H / DISP_HOURS; }
