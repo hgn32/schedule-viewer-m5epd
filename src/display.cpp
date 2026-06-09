@@ -37,6 +37,12 @@ void Display::begin() {
         Serial.printf("[FONT] TTF load failed (err=%d), using built-in font\n", (int)err);
         _canvas.setTextFont(2);
     }
+
+    // Follow reference pattern: INIT push then content push (same as m5ped-png-board)
+    _canvas.fillCanvas(C_WHITE);
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT);
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
+    delay(2000);
 }
 
 void Display::showBootMessage(const String& msg) {
