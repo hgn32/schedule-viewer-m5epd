@@ -27,11 +27,11 @@ void Display::begin() {
     if (err == ESP_OK) {
         Serial.printf("[FONT] Loaded %s\n", FONT_PATH);
         _canvas.useFreetypeFont(true);
-        _canvas.createRender(FS_DATE, 64);
-        _canvas.createRender(FS_TIME, 64);
-        _canvas.createRender(FS_HOUR, 64);
-        _canvas.createRender(FS_TITLE, 64);
-        _canvas.createRender(FS_LOC, 64);
+        _canvas.createRender(FS_DATE, 256);
+        _canvas.createRender(FS_TIME, 256);
+        _canvas.createRender(FS_HOUR, 256);
+        _canvas.createRender(FS_TITLE, 256);
+        _canvas.createRender(FS_LOC, 256);
         _font_loaded = true;
     } else {
         Serial.printf("[FONT] TTF load failed (err=%d), using built-in font\n", (int)err);
@@ -54,7 +54,7 @@ void Display::showBootMessage(const String& msg) {
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
     }
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU);
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
