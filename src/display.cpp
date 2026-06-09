@@ -43,7 +43,7 @@ void Display::showBootMessage(const String& msg) {
     _canvas.fillCanvas(C_WHITE);
     _canvas.setTextColor(C_BLACK, C_WHITE);
     if (_font_loaded) {
-        _canvas.createRender(FS_DATE, 64);
+        _canvas.setTextSize(FS_DATE);
         _canvas.setTextDatum(MC_DATUM);
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
@@ -235,14 +235,14 @@ std::vector<LayoutEvent> Display::layoutEvents(std::vector<Event> events) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void Display::canvasText(const String& str, int x, int y, int size_px, uint8_t color) {
-    _canvas.createRender(size_px, 64);
+    _canvas.setTextSize(size_px);
     _canvas.setTextColor(color, C_WHITE);
     _canvas.setTextDatum(TL_DATUM);
     _canvas.drawString(str, x, y);
 }
 
 void Display::canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color) {
-    _canvas.createRender(size_px, 64);
+    _canvas.setTextSize(size_px);
     _canvas.setTextColor(color, C_WHITE);
     _canvas.setTextDatum(TR_DATUM);
     _canvas.drawString(str, right_x, y);
