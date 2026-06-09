@@ -30,16 +30,6 @@ void Display::begin() {
     _canvas.createCanvas(SCR_W, SCR_H);
     _canvas.setTextDatum(TL_DATUM);
 
-    // Show first boot message using built-in font before TTF is loaded
-    _canvas.fillCanvas(C_WHITE);
-    _canvas.setTextColor(C_BLACK);
-    _canvas.setTextFont(2);
-    _canvas.setTextSize(3);
-    _canvas.setTextDatum(MC_DATUM);
-    _canvas.drawString("初期化中...", SCR_W / 2, SCR_H / 2);
-    _canvas.setTextDatum(TL_DATUM);
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
-
     // Load NotoSansJP TTF from SD card
     _ofr.setSerial(Serial);
     // M5EPD_Canvas hides TFT_eSPI as a private base, so setDrawer() can't reach
