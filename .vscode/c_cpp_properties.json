@@ -9,7 +9,6 @@
             "name": "PlatformIO",
             "includePath": [
                 "D:/source/repos/schedule-viewer-m5epd/src",
-                "D:/source/repos/schedule-viewer-m5epd/.pio/libdeps/m5paper/OpenFontRender/src",
                 "D:/source/repos/schedule-viewer-m5epd/.pio/libdeps/m5paper/M5EPD/src",
                 "C:/Users/a1055258/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                 "C:/Users/a1055258/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
@@ -246,7 +245,6 @@
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
                     "D:/source/repos/schedule-viewer-m5epd/src",
-                    "D:/source/repos/schedule-viewer-m5epd/.pio/libdeps/m5paper/OpenFontRender/src",
                     "D:/source/repos/schedule-viewer-m5epd/.pio/libdeps/m5paper/M5EPD/src",
                     "C:/Users/a1055258/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                     "C:/Users/a1055258/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
