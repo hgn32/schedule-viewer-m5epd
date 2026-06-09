@@ -2,12 +2,17 @@
 #include "time_util.h"
 #include <algorithm>
 
-// M5EPD 4bpp grayscale: 0 = black, 15 = white
-#define C_BLACK  0
-#define C_DGRAY  3
-#define C_GRAY   7
-#define C_LGRAY  11
-#define C_WHITE  15
+#define C_BLACK  15
+#define C_DGRAY  15
+#define C_GRAY   15
+#define C_LGRAY  15
+#define C_WHITE  0
+
+// #define C_BLACK  0
+// #define C_DGRAY  3
+// #define C_GRAY   7
+// #define C_LGRAY  11
+// #define C_WHITE  15
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
@@ -68,7 +73,7 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     struct tm jst_now = nowJst();
     uint32_t display_start_utc = floorHourUtc();
     uint32_t display_end_utc   = display_start_utc + DISP_HOURS * 3600u;
-
+    
     _canvas.fillCanvas(C_WHITE);
 
     drawHeader(jst_now);
@@ -94,7 +99,6 @@ void Display::drawHeader(const struct tm& jst_now) {
         canvasTextRight(time_str, SCR_W - 20, (HEADER_H - FS_TIME) / 2, FS_TIME);
     } else {
         _canvas.setTextFont(2);
-        _canvas.setTextColor(C_BLACK, C_WHITE);
         _canvas.setTextSize(3);
         _canvas.setTextDatum(ML_DATUM);
         _canvas.drawString(date_str, 20, HEADER_H / 2);
@@ -127,7 +131,6 @@ void Display::drawTimeline(const std::vector<Event>& events,
             } else {
                 _canvas.setTextFont(2);
                 _canvas.setTextSize(2);
-                _canvas.setTextColor(C_BLACK, C_WHITE);
                 _canvas.setTextDatum(TC_DATUM);
                 _canvas.drawString(label, LABEL_W / 2, y + 8);
                 _canvas.setTextDatum(TL_DATUM);
@@ -182,7 +185,6 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
         } else {
             _canvas.setTextFont(2);
             _canvas.setTextSize(2);
-            _canvas.setTextColor(C_BLACK, C_WHITE);
             _canvas.setTextDatum(TL_DATUM);
             _canvas.drawString(le.event.title, tx, ty);
         }
@@ -194,7 +196,6 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
         } else {
             _canvas.setTextFont(2);
             _canvas.setTextSize(1);
-            _canvas.setTextColor(C_DGRAY, C_WHITE);
             _canvas.drawString(le.event.location, tx, ly);
         }
     }
@@ -242,14 +243,12 @@ std::vector<LayoutEvent> Display::layoutEvents(std::vector<Event> events) {
 
 void Display::canvasText(const String& str, int x, int y, int size_px, uint8_t color) {
     _canvas.setTextSize(size_px);
-    _canvas.setTextColor(color, C_WHITE);
     _canvas.setTextDatum(TL_DATUM);
     _canvas.drawString(str, x, y);
 }
 
 void Display::canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color) {
     _canvas.setTextSize(size_px);
-    _canvas.setTextColor(color, C_WHITE);
     _canvas.setTextDatum(TR_DATUM);
     _canvas.drawString(str, right_x, y);
 }
