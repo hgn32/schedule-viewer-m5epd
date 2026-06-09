@@ -11,7 +11,9 @@ struct LayoutEvent {
 
 class Display {
 public:
-    // Call once in setup() after M5.begin(). Shows "初期化中..." and loads font.
+    Display() : _canvas(&M5.EPD) {}
+
+    // Call once in setup() after M5.begin(). Loads font from SD.
     void begin();
 
     // Full-screen message (used during boot stages)

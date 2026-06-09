@@ -53,7 +53,6 @@ void setup() {
     M5.begin();
     M5.EPD.SetRotation(90);
     M5.EPD.Clear(true);
-    M5.EPD.WaitBusy(10000);  // INIT refresh takes >3s; default WaitBusy timeout is 3s
     M5.RTC.begin();
 
     restoreTimeFromRTC();

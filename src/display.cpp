@@ -26,7 +26,6 @@ static const int FS_LOC   = 24;
 // ─────────────────────────────────────────────────────────────────────────────
 
 void Display::begin() {
-    _canvas.setDriver(&M5.EPD);
     _canvas.createCanvas(SCR_W, SCR_H);
     _canvas.setTextDatum(TL_DATUM);
 
@@ -84,7 +83,7 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
 
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
