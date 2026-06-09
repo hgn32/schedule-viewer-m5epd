@@ -11,11 +11,11 @@
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
-static const int FS_DATE  = 52;
-static const int FS_TIME  = 64;
-static const int FS_HOUR  = 38;
-static const int FS_TITLE = 30;
-static const int FS_LOC   = 24;
+static const int FS_DATE  = 26;
+static const int FS_TIME  = 32;
+static const int FS_HOUR  = 20;
+static const int FS_TITLE = 16;
+static const int FS_LOC   = 12;
 
 // ─────────────────────────────────────────────────────────────────────────────
 

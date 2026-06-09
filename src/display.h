@@ -35,11 +35,11 @@ private:
     void canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color = 0);
 
     // Screen dimensions (portrait, SetRotation(90))
-    static const int SCR_W      = 1404;
-    static const int SCR_H      = 1872;
-    static const int HEADER_H   = 120;
+    static const int SCR_W      = 540;
+    static const int SCR_H      = 960;
+    static const int HEADER_H   = 60;
     static const int TIMELINE_H = SCR_H - HEADER_H;
-    static const int LABEL_W    = 120;
+    static const int LABEL_W    = 60;
     static const int CONTENT_X  = LABEL_W;
     static const int CONTENT_W  = SCR_W - LABEL_W;
     static const int DISP_HOURS = 6;
