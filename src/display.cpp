@@ -2,12 +2,13 @@
 #include "time_util.h"
 #include <algorithm>
 
-// M5EPD 4bpp grayscale: 0 = black, 15 = white
-#define C_BLACK  0
-#define C_DGRAY  3
-#define C_GRAY   7
-#define C_LGRAY  11
-#define C_WHITE  15
+// M5EPD 4bpp grayscale as displayed on this panel: 0 = white, 15 = black
+// (verified empirically + matches location-hub-m5epd: bg left at 0, lines drawn with 15)
+#define C_WHITE  0
+#define C_LGRAY  4
+#define C_GRAY   8
+#define C_DGRAY  12
+#define C_BLACK  15
 
 static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
 
