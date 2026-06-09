@@ -20,10 +20,11 @@ static const int FS_LOC   = 12;
 // ─────────────────────────────────────────────────────────────────────────────
 
 void Display::begin() {
+    // Official M5EPD_TTF order: loadFont BEFORE createCanvas
+    esp_err_t err = _canvas.loadFont(FONT_PATH, SD);
     _canvas.createCanvas(SCR_W, SCR_H);
     _canvas.setTextDatum(TL_DATUM);
 
-    esp_err_t err = _canvas.loadFont(FONT_PATH, SD);
     if (err == ESP_OK) {
         Serial.printf("[FONT] Loaded %s\n", FONT_PATH);
         _canvas.useFreetypeFont(true);
@@ -37,9 +38,7 @@ void Display::begin() {
         Serial.printf("[FONT] TTF load failed (err=%d), using built-in font\n", (int)err);
         _canvas.setTextFont(2);
     }
-
-    _canvas.fillCanvas(C_WHITE);
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
+    // No pushCanvas here; first visible update is done by showBootMessage().
 }
 
 void Display::showBootMessage(const String& msg) {
@@ -57,7 +56,10 @@ void Display::showBootMessage(const String& msg) {
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
     }
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
+    // First visible push: INIT then GC16, matching m5ped-png-board's
+    // proven panel-init sequence at 540x960.
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT);
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,7 +79,8 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
 
-    _canvas.pushCanvas(0, 0, UPDATE_MODE_DU4);
+    // GC16 full refresh, matching official M5EPD_TTF and png-board.
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
