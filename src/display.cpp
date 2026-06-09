@@ -41,15 +41,21 @@ void Display::begin() {
 
     // Load NotoSansJP TTF from SD card
     _ofr.setSerial(Serial);
-    _ofr.setDrawer(_canvas);
+    // M5EPD_Canvas hides TFT_eSPI as a private base, so setDrawer() can't reach
+    // startWrite/endWrite. Wire the minimal callbacks manually instead.
+    _ofr.set_drawPixel([this](int32_t x, int32_t y, uint16_t c) {
+        _canvas.drawPixel(x, y, c >> 12);  // RGB565 top-4-bits → 4-bit gray
+    });
+    _ofr.set_startWrite([](void) {});
+    _ofr.set_endWrite([](void) {});
 
-    FT_Error err = _ofr.loadFont(FONT_PATH, SD);
+    FT_Error err = _ofr.loadFont(FONT_PATH);
     if (err == 0) {
         Serial.printf("[FONT] Loaded %s\n", FONT_PATH);
         _font_loaded = true;
     } else {
         Serial.printf("[FONT] TTF load failed (err=%d), using efontJA\n", (int)err);
-        _canvas.setFont(&fonts::efontJA_16);
+        _canvas.setTextFont(2);
     }
 }
 
@@ -59,7 +65,7 @@ void Display::showBootMessage(const String& msg) {
     if (_font_loaded) {
         ofrText(msg, SCR_W / 2 - 200, SCR_H / 2 - 40, FS_DATE);
     } else {
-        _canvas.setFont(&fonts::efontJA_16);
+        _canvas.setTextFont(2);
         _canvas.setTextSize(3);
         _canvas.setTextDatum(MC_DATUM);
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
@@ -100,7 +106,7 @@ void Display::drawHeader(const struct tm& jst_now) {
         ofrText(date_str, 20, (HEADER_H - FS_DATE) / 2, FS_DATE);
         ofrTextRight(time_str, SCR_W - 20, (HEADER_H - FS_TIME) / 2, FS_TIME);
     } else {
-        _canvas.setFont(&fonts::efontJA_16);
+        _canvas.setTextFont(2);
         _canvas.setTextColor(C_BLACK);
         _canvas.setTextSize(3);
         _canvas.setTextDatum(ML_DATUM);
@@ -136,7 +142,7 @@ void Display::drawTimeline(const std::vector<Event>& events,
                 int ly = y + 8;
                 ofrText(label, lx, ly, FS_HOUR);
             } else {
-                _canvas.setFont(&fonts::efontJA_16);
+                _canvas.setTextFont(2);
                 _canvas.setTextSize(2);
                 _canvas.setTextColor(C_BLACK);
                 _canvas.setTextDatum(TC_DATUM);
@@ -196,7 +202,7 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
         if (_font_loaded) {
             ofrText(le.event.title, tx, ty, FS_TITLE);
         } else {
-            _canvas.setFont(&fonts::efontJA_16);
+            _canvas.setTextFont(2);
             _canvas.setTextSize(2);
             _canvas.setTextColor(C_BLACK);
             _canvas.setTextDatum(TL_DATUM);
@@ -208,7 +214,7 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
         if (_font_loaded) {
             ofrText(le.event.location, tx, ly, FS_LOC, OFR_DGRAY);
         } else {
-            _canvas.setFont(&fonts::efontJA_16);
+            _canvas.setTextFont(2);
             _canvas.setTextSize(1);
             _canvas.setTextColor(C_DGRAY);
             _canvas.drawString(le.event.location, tx, ly);
