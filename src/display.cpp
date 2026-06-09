@@ -32,7 +32,7 @@ void Display::begin() {
     // Show first boot message using built-in font before TTF is loaded
     _canvas.fillCanvas(C_WHITE);
     _canvas.setTextColor(C_BLACK);
-    _canvas.setFont(&fonts::efontJA_16);
+    _canvas.setTextFont(2);
     _canvas.setTextSize(3);
     _canvas.setTextDatum(MC_DATUM);
     _canvas.drawString("初期化中...", SCR_W / 2, SCR_H / 2);
