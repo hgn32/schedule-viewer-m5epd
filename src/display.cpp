@@ -11,10 +11,9 @@
 // https://mplusfonts.github.io/
 // 太めが良い
 static const char* FONT_PATH = "/MPLUS1-ExtraBold.ttf";
-static const int FS_BOOT  = 36;
-static const int FS_HEADER  = 32;
-static const int FS_TITLE = 16;
-static const int FS_LOC   = 12;
+static const int FS_BOOT   = 46;
+static const int FS_HEADER = 36;
+static const int FS_EVENT  = 20;
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -29,8 +28,7 @@ void Display::begin() {
         _canvas.useFreetypeFont(true);
         _canvas.createRender(FS_BOOT, 256);
         _canvas.createRender(FS_HEADER, 256);
-        _canvas.createRender(FS_TITLE, 256);
-        _canvas.createRender(FS_LOC, 256);
+        _canvas.createRender(FS_EVENT, 256);
         _font_loaded = true;
     } else {
         Serial.printf("[FONT] TTF load failed (err=%d), using built-in font\n", (int)err);
@@ -70,11 +68,11 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
 
     drawHeader(jst_now);
 
-    _canvas.drawLine(0, HEADER_H, SCR_W, HEADER_H, C_BLACK);
-    _canvas.fillRect(LABEL_W, HEADER_H, 3, SCR_H - HEADER_H, C_GRAY);
-
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
+
+    _canvas.drawLine(0, HEADER_H, SCR_W, HEADER_H, C_BLACK);
+    _canvas.fillRect(LABEL_W, HEADER_H, 3, SCR_H - HEADER_H, C_GRAY);
 
     // GC16 full refresh, matching official M5EPD_TTF and png-board.
     _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT); //ゴースト対策
@@ -109,9 +107,6 @@ void Display::drawTimeline(const std::vector<Event>& events,
     for (int h = 0; h <= DISP_HOURS; h++) {
         int y = HEADER_H + (int)(h * px_hour);
 
-        uint8_t line_col = (h == 0 || h == DISP_HOURS) ? C_BLACK : C_LGRAY;
-        _canvas.drawLine(0, y, SCR_W, y, line_col);
-
         if (h < DISP_HOURS) {
             uint32_t hour_utc = display_start_utc + (uint32_t)(h * 3600);
             time_t jst_t = (time_t)(hour_utc + JST_OFFSET);
@@ -129,6 +124,9 @@ void Display::drawTimeline(const std::vector<Event>& events,
                 _canvas.setTextDatum(TL_DATUM);
             }
         }
+
+        // uint8_t line_col = (h == 0 || h == DISP_HOURS) ? C_BLACK : C_LGRAY;
+        _canvas.drawLine(0, y, SCR_W, y, C_BLACK);
     }
 
     if (now_utc >= display_start_utc &&
@@ -172,9 +170,9 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
     int tx = x_left + 6;
     int ty = y_top + 6;
 
-    if (box_h >= FS_TITLE + 10) {
+    if (box_h >= FS_EVENT + 10) {
         if (_font_loaded) {
-            canvasText(le.event.title, tx, ty, FS_TITLE);
+            canvasText(le.event.title, tx, ty, FS_EVENT);
         } else {
             _canvas.setTextFont(2);
             _canvas.setTextSize(2);
@@ -182,10 +180,10 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
             _canvas.drawString(le.event.title, tx, ty);
         }
     }
-    if (box_h >= FS_TITLE + FS_LOC + 18 && le.event.location.length() > 0) {
-        int ly = ty + FS_TITLE + 4;
+    if (box_h >= FS_EVENT + FS_EVENT + 18 && le.event.location.length() > 0) {
+        int ly = ty + FS_EVENT + 4;
         if (_font_loaded) {
-            canvasText(le.event.location, tx, ly, FS_LOC, C_DGRAY);
+            canvasText(le.event.location, tx, ly, FS_EVENT, C_DGRAY);
         } else {
             _canvas.setTextFont(2);
             _canvas.setTextSize(1);
