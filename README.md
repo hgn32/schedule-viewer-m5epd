@@ -3,6 +3,8 @@
 M5Paper(M5EPD)のE-Inkディスプレイに、PC上のOutlook予定表を6時間分のタイムライン表示するビューアです。
 PC側のPythonスクリプトがOutlookの予定をUSBシリアル経由でM5Paperに送信し、デバイス側がそれを受信してE-Inkに描画します。
 
+> **インターネット通信は一切行いません。** 通信はPCとM5Paper間のUSBシリアルのみで完結します(Wi-Fi/Bluetoothは使用しない)。
+
 ## 構成
 
 ```
@@ -52,14 +54,18 @@ REQ:ALL
 
 ### 必要環境
 
-- [PlatformIO](https://platformio.org/)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- VSCode拡張機能 [PlatformIO IDE](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide)
 - M5Paper本体(M5EPDライブラリ)
 
-### ビルド/書き込み
+### ビルド/書き込み(VSCode + PlatformIO)
 
-```sh
-pio run -t upload
-```
+1. VSCodeでこのプロジェクトのフォルダを開く(PlatformIO拡張が自動的にプロジェクトを認識する)
+2. M5PaperをUSBで接続する
+3. 画面下部のステータスバー、または左側のPlatformIOアイコン(蟻のマーク)から以下を実行
+   - **Build**(✓アイコン): ビルドのみ
+   - **Upload**(→アイコン): ビルドして書き込み
+   - **Monitor**(プラグアイコン): シリアルモニタを開く(115200bps)
 
 `platformio.ini` で `m5stack/M5EPD` ライブラリと `huge_app.csv` パーティションを使用。
 
