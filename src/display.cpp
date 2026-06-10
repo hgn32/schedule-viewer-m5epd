@@ -237,11 +237,14 @@ std::vector<LayoutEvent> Display::layoutEvents(std::vector<Event> events) {
 void Display::canvasText(const String& str, int x, int y, int size_px, uint8_t color) {
     _canvas.setTextSize(size_px);
     _canvas.setTextDatum(TL_DATUM);
+    // Faux-bold: draw twice with a 1px horizontal offset (font renders thin on this panel)
     _canvas.drawString(str, x, y);
+    _canvas.drawString(str, x + 1, y);
 }
 
 void Display::canvasTextRight(const String& str, int right_x, int y, int size_px, uint8_t color) {
     _canvas.setTextSize(size_px);
     _canvas.setTextDatum(TR_DATUM);
     _canvas.drawString(str, right_x, y);
+    _canvas.drawString(str, right_x + 1, y);
 }
