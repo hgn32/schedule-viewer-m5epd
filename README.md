@@ -5,10 +5,6 @@ PC側のPythonスクリプトがOutlookの予定をUSBシリアル経由でM5Pap
 
 > **インターネット通信は一切行いません。** 通信はPCとM5Paper間のUSBシリアルのみで完結します(Wi-Fi/Bluetoothは使用しない)。
 
-## 実機イメージ
-
-![実機イメージ](docs/screenshot.jpg)
-
 ## 構成
 
 ```
