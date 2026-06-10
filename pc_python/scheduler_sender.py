@@ -85,8 +85,11 @@ def get_outlook_appointments(patterns):
                 continue
             start_dt = item.Start
             end_dt = item.End
-            start_ts = int(start_dt.timestamp())
-            end_ts = int(end_dt.timestamp())
+            # item.Start/.End from Outlook COM carry JST wall-clock values
+            # tagged as UTC, so .timestamp() yields epoch values 9h ahead
+            # of true UTC. Subtract the JST offset to correct.
+            start_ts = int(start_dt.timestamp()) - 9 * 3600
+            end_ts = int(end_dt.timestamp()) - 9 * 3600
 
             subject = clean_text(item.Subject, patterns)
             location = clean_text(item.Location, patterns)

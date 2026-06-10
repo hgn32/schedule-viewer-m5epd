@@ -71,7 +71,7 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     drawHeader(jst_now);
 
     _canvas.drawLine(0, HEADER_H, SCR_W, HEADER_H, C_BLACK);
-    _canvas.drawLine(LABEL_W, HEADER_H, LABEL_W, SCR_H, C_GRAY);
+    _canvas.fillRect(LABEL_W, HEADER_H, 3, SCR_H - HEADER_H, C_GRAY);
 
     auto events = store.getInRange(display_start_utc, display_end_utc);
     drawTimeline(events, display_start_utc, now_utc);
