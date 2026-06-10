@@ -168,6 +168,7 @@ void Display::drawEventBox(const LayoutEvent& le, uint32_t display_start_utc) {
 
     _canvas.fillRoundRect(x_left, y_top, box_w, box_h, 6, C_WHITE);
     _canvas.drawRoundRect(x_left, y_top, box_w, box_h, 6, C_BLACK);
+    _canvas.drawRoundRect(x_left + 1, y_top + 1, box_w - 2, box_h - 2, 5, C_BLACK);
 
     int tx = x_left + 6;
     int ty = y_top + 6;
