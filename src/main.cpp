@@ -8,8 +8,6 @@ static ScheduleStore g_store;
 static Protocol      g_proto(&g_store);
 static Display       g_display;
 
-static uint32_t g_last_hour_utc = 0;
-
 // ─────────────────────────────────────────────────────────────────────────────
 
 static void restoreTimeFromRTC() {
@@ -63,7 +61,6 @@ void setup() {
     g_display.showBootMessage("スケジュール要求中...");
     Serial.println("REQ:ALL");
 
-    g_last_hour_utc = floorHourUtc();
     g_display.render(g_store, nowUtc());
 }
 
@@ -86,15 +83,7 @@ void loop() {
             }
 
             g_display.render(g_store, nowUtc());
-            g_last_hour_utc = floorHourUtc();
         }
-    }
-
-    // Re-render when the display hour window shifts
-    uint32_t current_hour = floorHourUtc();
-    if (current_hour != g_last_hour_utc) {
-        g_last_hour_utc = current_hour;
-        g_display.render(g_store, nowUtc());
     }
 
     delay(500);
