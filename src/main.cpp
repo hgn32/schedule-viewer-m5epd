@@ -51,17 +51,13 @@ void setup() {
     M5.begin();
     M5.EPD.SetRotation(90);
     M5.EPD.Clear();
+    
     M5.RTC.begin();
+    restoreTimeFromRTC();    
 
-    restoreTimeFromRTC();
-
-    // begin() shows "初期化中..." and loads font from SD
     g_display.begin();
-
     g_display.showBootMessage("スケジュール要求中...");
     Serial.println("REQ:ALL");
-
-    g_display.render(g_store, nowUtc());
 }
 
 void loop() {

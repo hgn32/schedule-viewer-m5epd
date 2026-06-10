@@ -8,17 +8,11 @@
 #define C_LGRAY  15
 #define C_WHITE  0
 
-// #define C_BLACK  0
-// #define C_DGRAY  3
-// #define C_GRAY   7
-// #define C_LGRAY  11
-// #define C_WHITE  15
-
-static const char* FONT_PATH = "/NotoSansJP-VariableFont_wght.ttf";
-
-static const int FS_DATE  = 26;
-static const int FS_TIME  = 32;
-static const int FS_HOUR  = 20;
+// https://mplusfonts.github.io/
+// 太めが良い
+static const char* FONT_PATH = "/MPLUS1-ExtraBold.ttf";
+static const int FS_BOOT  = 36;
+static const int FS_HEADER  = 32;
 static const int FS_TITLE = 16;
 static const int FS_LOC   = 12;
 
@@ -33,9 +27,8 @@ void Display::begin() {
     if (err == ESP_OK) {
         Serial.printf("[FONT] Loaded %s\n", FONT_PATH);
         _canvas.useFreetypeFont(true);
-        _canvas.createRender(FS_DATE, 256);
-        _canvas.createRender(FS_TIME, 256);
-        _canvas.createRender(FS_HOUR, 256);
+        _canvas.createRender(FS_BOOT, 256);
+        _canvas.createRender(FS_HEADER, 256);
         _canvas.createRender(FS_TITLE, 256);
         _canvas.createRender(FS_LOC, 256);
         _font_loaded = true;
@@ -49,7 +42,7 @@ void Display::begin() {
 void Display::showBootMessage(const String& msg) {
     _canvas.fillCanvas(C_WHITE);
     if (_font_loaded) {
-        _canvas.setTextSize(FS_DATE);
+        _canvas.setTextSize(FS_BOOT);
         _canvas.setTextDatum(MC_DATUM);
         _canvas.drawString(msg, SCR_W / 2, SCR_H / 2);
         _canvas.setTextDatum(TL_DATUM);
@@ -84,6 +77,7 @@ void Display::render(ScheduleStore& store, uint32_t now_utc) {
     drawTimeline(events, display_start_utc, now_utc);
 
     // GC16 full refresh, matching official M5EPD_TTF and png-board.
+    _canvas.pushCanvas(0, 0, UPDATE_MODE_INIT); //ゴースト対策
     _canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
 }
 
@@ -94,8 +88,8 @@ void Display::drawHeader(const struct tm& jst_now) {
     String time_str = formatTime(jst_now);
 
     if (_font_loaded) {
-        canvasText(date_str, 20, (HEADER_H - FS_DATE) / 2, FS_DATE);
-        canvasTextRight(time_str, SCR_W - 20, (HEADER_H - FS_TIME) / 2, FS_TIME);
+        canvasText(date_str, 20, (HEADER_H - FS_HEADER) / 2, FS_HEADER);
+        canvasTextRight(time_str, SCR_W - 20, (HEADER_H - FS_HEADER) / 2, FS_HEADER);
     } else {
         _canvas.setTextFont(2);
         _canvas.setTextSize(3);
@@ -126,7 +120,7 @@ void Display::drawTimeline(const std::vector<Event>& events,
             String label = formatHour(t.tm_hour);
 
             if (_font_loaded) {
-                canvasText(label, (LABEL_W - 40) / 2, y + 8, FS_HOUR);
+                canvasText(label, (LABEL_W - 40) / 2, y + 8, FS_HEADER);
             } else {
                 _canvas.setTextFont(2);
                 _canvas.setTextSize(2);
